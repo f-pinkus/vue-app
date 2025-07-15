@@ -1,6 +1,6 @@
 <template>
   <div id="employee-form">
-    <form>
+    <form @submit.prevent="handleSubmit">
       <label>Employee name</label>
       <input v-model="employee.name" type="text" />
       <label>Employee Email</label>
@@ -15,12 +15,43 @@
     name: 'employee-form',
     data() {
       return {
+        submitting: false,
+        error: false,
+        success: false,
         employee: {
           name: '',
           email: '',
         },
       }
     },
+
+    methods: {
+      handleSubmit() {
+        console.log("handleSubmit!")
+
+        this.submitting = true
+        this.clearStatus()
+
+        if (this.invalidName || this.invalidEmail) {
+          this.error = true
+          return
+        }
+
+        this.$emit("add:employee", this.employee)
+        this.employee = {
+          name: "",
+          email: "",
+        }
+        this.error = false
+        this.success = true
+        this.submitting = false
+      },
+
+      clearStatus() {
+        this.success = false
+        this.error = false
+      }
+    }
   }
 </script>
 
